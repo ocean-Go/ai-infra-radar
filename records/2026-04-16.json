@@ -1,0 +1,90 @@
+{
+  "date": "2026-04-16",
+  "axes": {
+    "capex": { "value": 86, "label": "AI Capex", "sublabel": "需求持续强劲" },
+    "power": { "value": 45, "label": "⚡ 电力约束", "sublabel": "资源约束显现" },
+    "cooling": { "value": 72, "label": "冷却技术", "sublabel": "液冷需求提升" },
+    "scale": { "value": 84, "label": "集群规模", "sublabel": "集群规模继续扩大" },
+    "visibility": { "value": 77, "label": "订单可见度", "sublabel": "订单进入兑现周期" },
+    "pricing": { "value": 70, "label": "定价权", "sublabel": "供给约束支撑价格" }
+  },
+  "signal": {
+    "status": "🟢 赛道仍在正轨",
+    "phase": "⚡ 资源约束显现",
+    "headline": "赛道仍在正轨，但需求强、资源紧",
+    "sub": "供给侧开始成为主要矛盾"
+  },
+  "scores": [
+    { "value": 86, "label": "Capex 动能", "color": "green" },
+    { "value": 45, "label": "电力余量", "color": "yellow" },
+    { "value": 72, "label": "冷却成熟度", "color": "cyan" },
+    { "value": 84, "label": "规模结构化", "color": "green" }
+  ],
+  "totalPulse": 72,
+  "allocation": [
+    { "tag": "core", "label": "Eaton / Schneider", "sub": "Core", "pct": 50, "color": "#3b82f6" },
+    { "tag": "growth", "label": "Vertiv", "sub": "Growth", "pct": 30, "color": "#22c55e" },
+    { "tag": "opt", "label": "细分设备", "sub": "Optional", "pct": 10, "color": "#eab308" },
+    { "tag": "cash", "label": "Cash", "sub": "", "pct": 10, "color": "#475569" }
+  ],
+  "action": {
+    "moves": [
+      { "delta": "Hold", "text": "保持配置结构" },
+      { "delta": "观察", "text": "等待更清晰的供给侧信号" }
+    ],
+    "reason": "需求明确，但供给瓶颈开始影响节奏，短期不适合激进加仓。"
+  },
+  "triggers": [
+    {
+      "icon": "⚡",
+      "iconClass": "power",
+      "text": "电力接入周期延长",
+      "meaning": "→ 项目推进节奏放缓"
+    },
+    {
+      "icon": "💧",
+      "iconClass": "cool",
+      "text": "液冷需求提升",
+      "meaning": "→ 单机柜价值量上升"
+    },
+    {
+      "icon": "📦",
+      "iconClass": "scale",
+      "text": "订单进入兑现周期",
+      "meaning": "→ 收入确认成为关键"
+    }
+  ],
+  "marketStatus": {
+    "demand": { "label": "需求", "color": "green" },
+    "supply": { "label": "供给", "color": "yellow" },
+    "power": { "label": "电力", "color": "yellow" }
+  },
+  "verdicts": [
+    "需求端继续强劲",
+    "供给端开始成为主要矛盾",
+    "行业从扩张转向兑现阶段",
+    "短期波动更多来自节奏",
+    "结构性机会依然存在"
+  ],
+  "summary": "AI基础设施需求仍强，但开始进入<em>资源约束阶段</em>，节奏比方向更重要。",
+  "companies": [
+    {
+      "name": "Vertiv",
+      "ticker": "VRT · NYSE",
+      "tag": "growth",
+      "insight": "高弹性但波动较大"
+    },
+    {
+      "name": "Eaton",
+      "ticker": "ETN · NYSE",
+      "tag": "core",
+      "insight": "电力侧稳定增长"
+    },
+    {
+      "name": "Schneider",
+      "ticker": "SU · EPA",
+      "tag": "core",
+      "insight": "系统能力优势明显"
+    }
+  ]
+}
