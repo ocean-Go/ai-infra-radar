@@ -1,0 +1,90 @@
+{
+  "date": "2026-04-17",
+  "axes": {
+    "capex": { "value": 87, "label": "AI Capex", "sublabel": "大厂投入维持高位" },
+    "power": { "value": 44, "label": "⚡ 电力约束", "sublabel": "供给决定项目节奏" },
+    "cooling": { "value": 73, "label": "冷却技术", "sublabel": "液冷持续走向主流" },
+    "scale": { "value": 85, "label": "集群规模", "sublabel": "高密度AI集群扩张" },
+    "visibility": { "value": 79, "label": "订单可见度", "sublabel": "订单与交付节奏清晰" },
+    "pricing": { "value": 71, "label": "定价权", "sublabel": "供给偏紧支撑价格" }
+  },
+  "signal": {
+    "status": "🟢 趋势未变",
+    "phase": "⚡ 供给决定节奏",
+    "headline": "赛道继续在正轨，但进入供给决定节奏阶段",
+    "sub": "行业不是降温，而是被电力与交付能力卡住节奏"
+  },
+  "scores": [
+    { "value": 87, "label": "Capex 动能", "color": "green" },
+    { "value": 44, "label": "电力余量", "color": "yellow" },
+    { "value": 73, "label": "冷却成熟度", "color": "cyan" },
+    { "value": 85, "label": "规模结构化", "color": "green" }
+  ],
+  "totalPulse": 73,
+  "allocation": [
+    { "tag": "core", "label": "Eaton / Schneider", "sub": "Core", "pct": 55, "color": "#3b82f6" },
+    { "tag": "growth", "label": "Vertiv", "sub": "Growth", "pct": 25, "color": "#22c55e" },
+    { "tag": "opt", "label": "卫星仓位", "sub": "Optional", "pct": 10, "color": "#eab308" },
+    { "tag": "cash", "label": "Cash", "sub": "", "pct": 10, "color": "#475569" }
+  ],
+  "action": {
+    "moves": [
+      { "delta": "-5%", "text": "Vertiv（Growth → Core 切换）" },
+      { "delta": "+5%", "text": "Eaton / Schneider（Core 稳健增配）" }
+    ],
+    "reason": "短期进入交付与兑现阶段，稳健资产相对更占优。不是跌出来的机会，而是成长与稳健之间的结构切换。"
+  },
+  "triggers": [
+    {
+      "icon": "⚡",
+      "iconClass": "power",
+      "text": "电力与关键设备交付周期继续拉长",
+      "meaning": "→ 收入确认延后，但价格与利润更稳"
+    },
+    {
+      "icon": "💧",
+      "iconClass": "cool",
+      "text": "液冷订单占比提升",
+      "meaning": "→ 从边缘走向主流，技术门槛提高，龙头优势扩大"
+    },
+    {
+      "icon": "🌐",
+      "iconClass": "scale",
+      "text": "GW级超大规模AI数据中心持续规划",
+      "meaning": "→ 需求从周期性逐步走向结构性长期"
+    }
+  ],
+  "marketStatus": {
+    "demand": { "label": "需求", "color": "green" },
+    "supply": { "label": "供给", "color": "yellow" },
+    "power": { "label": "电力", "color": "yellow" }
+  },
+  "verdicts": [
+    "需求稳，AI Capex并未降温",
+    "项目推进更受制于电力与交付能力",
+    "液冷继续从试点走向主流部署",
+    "短期资金偏向稳健资产而非高弹性追高",
+    "赛道逻辑未变，节奏逻辑变得更重要"
+  ],
+  "summary": "AI基础设施仍在加速，但真正决定短期节奏的，不再只是<em>需求</em>，而是<em>供给、交付与电力接入</em>。",
+  "companies": [
+    {
+      "name": "Vertiv",
+      "ticker": "VRT · NYSE",
+      "tag": "growth",
+      "insight": "液冷+高密度方案，订单弹性大"
+    },
+    {
+      "name": "Eaton",
+      "ticker": "ETN · NYSE",
+      "tag": "core",
+      "insight": "电力设备供不应求，兑现更稳"
+    },
+    {
+      "name": "Schneider",
+      "ticker": "SU · EPA",
+      "tag": "core",
+      "insight": "系统集成能力强，大型项目受益"
+    }
+  ]
+}
