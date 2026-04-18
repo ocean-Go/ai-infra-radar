@@ -1,0 +1,56 @@
+{
+  "date": "2026-04-13",
+  "axes": {
+    "capex": { "value": 91, "label": "AI Capex", "sublabel": "持续强化" },
+    "power": { "value": 46, "label": "⚡ 电力约束", "sublabel": "开始显现" },
+    "cooling": { "value": 68, "label": "冷却技术", "sublabel": "液冷升级" },
+    "scale": { "value": 82, "label": "集群规模", "sublabel": "规模扩张" },
+    "visibility": { "value": 74, "label": "订单可见度", "sublabel": "订单增长" },
+    "pricing": { "value": 70, "label": "定价权", "sublabel": "稳中提升" }
+  },
+  "signal": {
+    "status": "🟢 强化",
+    "phase": "📈 订单驱动",
+    "headline": "订单与液冷升级推动AI Infra持续强化",
+    "sub": "需求驱动为主导"
+  },
+  "scores": [
+    { "value": 91, "label": "Capex 动能", "color": "green" },
+    { "value": 46, "label": "电力余量", "color": "yellow" },
+    { "value": 68, "label": "冷却成熟度", "color": "cyan" },
+    { "value": 82, "label": "规模结构化", "color": "green" }
+  ],
+  "totalPulse": 74,
+  "allocation": [
+    { "tag": "core", "label": "Core资产", "sub": "Core", "pct": 45, "color": "#3b82f6" },
+    { "tag": "growth", "label": "Vertiv", "sub": "Growth", "pct": 35, "color": "#22c55e" },
+    { "tag": "opt", "label": "液冷链", "sub": "Optional", "pct": 10, "color": "#eab308" },
+    { "tag": "cash", "label": "Cash", "sub": "", "pct": 10, "color": "#475569" }
+  ],
+  "action": {
+    "moves": [
+      { "delta": "+5%", "text": "加仓 Growth" }
+    ],
+    "reason": "需求强劲，订单驱动明显。"
+  },
+  "triggers": [
+    {
+      "icon": "📈",
+      "iconClass": "scale",
+      "text": "订单增长",
+      "meaning": "→ 行业景气提升"
+    }
+  ],
+  "marketStatus": {
+    "demand": { "label": "需求", "color": "green" },
+    "supply": { "label": "供给", "color": "green" },
+    "power": { "label": "电力", "color": "yellow" }
+  },
+  "verdicts": [
+    "需求驱动主导",
+    "订单持续增长",
+    "行业强化"
+  ],
+  "summary": "AI Infra在订单与技术升级驱动下持续强化。",
+  "companies": []
+}
