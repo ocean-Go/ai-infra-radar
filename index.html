@@ -117,6 +117,7 @@
     let FULL_CACHE = {};
     let CURRENT_KEY = null;
     let CURRENT_MODE = 'today';
+    let RENDER_LOCK = false;
 
     function radarPoint(value, axisIndex) {
       const rad = AXIS_ANGLES[axisIndex] * Math.PI / 180;
@@ -145,8 +146,15 @@
     }
 
     async function getRecord(key) {
+      if (!key) return FULL_CACHE[APP_INDEX.latest] || null;
       if (FULL_CACHE[key]) return FULL_CACHE[key];
-      return APP_INDEX.records.find(r => r.date === key) || null;
+      const summary = APP_INDEX.records.find(r => r.date === key);
+      if (summary) {
+        const full = await fetchJson('records/' + key + '.json').catch(() => null);
+        if (full) { FULL_CACHE[key] = full; return full; }
+        return summary;
+      }
+      return null;
     }
 
     function buildRadarSVG(d) {
@@ -234,10 +242,12 @@
 
     function formatTs(dateLabel) { return `${dateLabel} · AI Infra Radar`; }
     function switchMode(mode) { CURRENT_MODE = mode; render(); }
-    function switchDate(val) { CURRENT_KEY = val; CURRENT_MODE = 'today'; render(); }
+    async function switchDate(val) { if (RENDER_LOCK) return; CURRENT_KEY = val; CURRENT_MODE = 'today'; await render(); }
 
     async function render() {
       if (!APP_INDEX) return;
+      if (RENDER_LOCK) return;
+      RENDER_LOCK = true;
       const d = await getRecord(CURRENT_KEY);
       const options = APP_INDEX.records.map(r => `<option value="${r.date}" ${r.date===CURRENT_KEY?'selected':''}>${r.date}</option>`).join('');
       const historyItems = APP_INDEX.records.map(r => `<div class="history-item"><div class="history-date">${r.date}</div><div class="history-title">${r.signal?.headline || 'No headline'}</div></div>`).join('');
@@ -260,6 +270,7 @@
       }
 
       document.getElementById('app').innerHTML = `<div class="header"><div class="header-left"><svg class="radar-icon" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.3"/><circle cx="16" cy="16" r="10" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.5"/><circle cx="16" cy="16" r="6" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.7"/><circle cx="16" cy="16" r="2" fill="#3b82f6"/><line x1="16" y1="16" x2="22" y2="10" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round"/></svg><h1>📡 AI Infra 投资雷达图</h1></div><div class="toolbar"><button class="btn ${CURRENT_MODE==='today'?'active':''}" onclick="switchMode('today')">当天</button><button class="btn ${CURRENT_MODE==='history'?'active':''}" onclick="switchMode('history')">历史</button><select class="date-select" onchange="switchDate(this.value)">${options}</select></div></div><div class="header-meta"><span class="badge ${isFullRecord(d) ? 'green' : 'gray'}">${badgeStatus}</span><span class="badge ${isFullRecord(d) ? 'cyan' : 'gray'}">${badgePhase}</span><span class="timestamp">${formatTs(CURRENT_KEY || APP_INDEX.latest)}</span></div><div id="today-view" class="${CURRENT_MODE==='today'?'':'hidden'}">${todayView}</div><div id="history-view" class="${CURRENT_MODE==='history'?'':'hidden'}"><div class="card"><div class="card-title">历史记录</div><div class="history-list">${historyItems}</div></div></div>`;
+      RENDER_LOCK = false;
     }
 
     loadAppData();
