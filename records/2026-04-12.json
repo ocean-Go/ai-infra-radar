@@ -1,0 +1,56 @@
+{
+  "date": "2026-04-12",
+  "axes": {
+    "capex": { "value": 92, "label": "AI Capex", "sublabel": "高位延续" },
+    "power": { "value": 48, "label": "⚡ 电力约束", "sublabel": "尚未成为主矛盾" },
+    "cooling": { "value": 66, "label": "冷却技术", "sublabel": "液冷起步" },
+    "scale": { "value": 80, "label": "集群规模", "sublabel": "扩张初期" },
+    "visibility": { "value": 72, "label": "订单可见度", "sublabel": "需求释放" },
+    "pricing": { "value": 68, "label": "定价权", "sublabel": "稳定" }
+  },
+  "signal": {
+    "status": "🟢 上行",
+    "phase": "📈 Capex驱动",
+    "headline": "AI Capex高位延续，数据中心基础设施景气上行",
+    "sub": "需求主导阶段"
+  },
+  "scores": [
+    { "value": 92, "label": "Capex 动能", "color": "green" },
+    { "value": 48, "label": "电力余量", "color": "yellow" },
+    { "value": 66, "label": "冷却成熟度", "color": "cyan" },
+    { "value": 80, "label": "规模结构化", "color": "green" }
+  ],
+  "totalPulse": 75,
+  "allocation": [
+    { "tag": "core", "label": "Core资产", "sub": "Core", "pct": 40, "color": "#3b82f6" },
+    { "tag": "growth", "label": "Vertiv", "sub": "Growth", "pct": 40, "color": "#22c55e" },
+    { "tag": "opt", "label": "液冷链", "sub": "Optional", "pct": 10, "color": "#eab308" },
+    { "tag": "cash", "label": "Cash", "sub": "", "pct": 10, "color": "#475569" }
+  ],
+  "action": {
+    "moves": [
+      { "delta": "+10%", "text": "加仓 Growth" }
+    ],
+    "reason": "初期阶段以需求驱动为主，适合进攻配置。"
+  },
+  "triggers": [
+    {
+      "icon": "📈",
+      "iconClass": "scale",
+      "text": "AI Capex提升",
+      "meaning": "→ 行业景气启动"
+    }
+  ],
+  "marketStatus": {
+    "demand": { "label": "需求", "color": "green" },
+    "supply": { "label": "供给", "color": "green" },
+    "power": { "label": "电力", "color": "green" }
+  },
+  "verdicts": [
+    "行业启动阶段",
+    "需求驱动",
+    "配置偏进攻"
+  ],
+  "summary": "AI基础设施处于需求驱动的启动阶段。",
+  "companies": []
+}
