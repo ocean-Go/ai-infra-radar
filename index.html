@@ -1,38 +1,215 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Infra 投资雷达图</title>
-<style>
-body{background:#0a0e17;color:#e2e8f0;font-family:Arial;padding:20px}
-.card{background:#111827;border:1px solid #1e2d45;border-radius:10px;padding:20px;margin-bottom:12px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Infra 投资雷达图</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0e17; --surface: #111827; --surface2: #1a2235;
+      --border: #1e2d45; --accent: #3b82f6; --accent2: #06b6d4;
+      --green: #22c55e; --yellow: #eab308; --red: #ef4444;
+      --text: #e2e8f0; --muted: #64748b;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .hidden { display: none !important; }
+    .loading, .error-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; color: var(--muted); }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .radar-icon { width: 32px; height: 32px; opacity: 0.9; }
+    .header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+    .header-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+    .badge.green { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .badge.cyan  { background: rgba(6,182,212,0.12); color: var(--accent2); border: 1px solid rgba(6,182,212,0.25); }
+    .badge.gray  { background: rgba(100,116,139,0.12); color: #cbd5e1; border: 1px solid rgba(100,116,139,0.25); }
+    .timestamp { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+    .toolbar { display:flex; align-items:center; gap:10px; }
+    .btn, .date-select {
+      background: var(--surface2); color: var(--text); border:1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; font-size: 12px; font-family: 'Inter', sans-serif;
+    }
+    .btn { cursor:pointer; }
+    .btn.active { border-color: var(--accent); color: #fff; box-shadow: 0 0 0 1px rgba(59,130,246,0.2) inset; }
+    .date-select { min-width: 160px; }
+    .main-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+    @media(max-width:900px){ .main-grid { grid-template-columns: 1fr; } .toolbar { width:100%; justify-content:flex-start; } }
+    .right-panel { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .radar-section { display: flex; flex-direction: column; }
+    .radar-wrap { display: flex; justify-content: center; align-items: center; flex: 1; }
+    .radar-svg { width: 100%; max-width: 480px; height: auto; }
+    .pulse-bar-wrap { margin-top: 16px; }
+    .pulse-bar-labels { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 4px; }
+    .pulse-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+    .pulse-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--accent2)); transition: width 1s ease; }
+    .signal-box { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border-radius: 8px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); }
+    .signal-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px rgba(34,197,94,0.5); flex-shrink: 0; margin-top: 4px; }
+    .signal-text { font-size: 13px; font-weight: 500; line-height: 1.4; }
+    .signal-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .score-item { background: var(--surface2); border-radius: 8px; padding: 12px; text-align: center; }
+    .score-value { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; line-height: 1; }
+    .score-label { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .score-item.green .score-value { color: var(--green); }
+    .score-item.cyan  .score-value { color: var(--accent2); }
+    .score-item.yellow .score-value { color: var(--yellow); }
+    .score-item.blue  .score-value { color: var(--accent); }
+    .ticker-table { width: 100%; border-collapse: collapse; }
+    .ticker-table th { font-size: 10px; font-weight: 600; color: var(--muted); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); letter-spacing: 0.05em; }
+    .ticker-table th:last-child, .ticker-table td:last-child { text-align: right; }
+    .ticker-table td { font-size: 12px; padding: 8px 8px; border-bottom: 1px solid rgba(30,45,69,0.6); vertical-align: middle; }
+    .ticker-table tr:last-child td { border-bottom: none; }
+    .ticker-name { font-weight: 600; }
+    .ticker-sym { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+    .alloc-bar { height: 4px; background: var(--surface); border-radius: 2px; margin-top: 3px; overflow: hidden; }
+    .alloc-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+    .tag { display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; }
+    .tag.core   { background: rgba(59,130,246,0.15); color: var(--accent); }
+    .tag.growth { background: rgba(34,197,94,0.15); color: var(--green); }
+    .tag.opt    { background: rgba(234,179,8,0.15); color: var(--yellow); }
+    .trigger-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(30,45,69,0.6); }
+    .trigger-item:last-child { border-bottom: none; }
+    .trigger-icon { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; margin-top: 1px; }
+    .trigger-icon.power { background: rgba(234,179,8,0.15); color: var(--yellow); }
+    .trigger-icon.cool { background: rgba(6,182,212,0.15); color: var(--accent2); }
+    .trigger-icon.scale { background: rgba(34,197,94,0.15); color: var(--green); }
+    .trigger-text { font-size: 12px; line-height: 1.5; }
+    .trigger-meaning { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .action-box { background: var(--surface2); border-radius: 8px; padding: 14px; }
+    .action-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .action-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .action-arrow { font-size: 12px; color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .action-text { font-size: 12px; }
+    .action-reason { font-size: 11px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); line-height: 1.5; }
+    .bottom-section { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    @media(max-width:900px){ .bottom-section { grid-template-columns: 1fr; } }
+    .status-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+    .status-pill { text-align: center; padding: 6px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
+    .status-pill.green  { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+    .status-pill.yellow { background: rgba(234,179,8,0.1); color: var(--yellow); border: 1px solid rgba(234,179,8,0.2); }
+    .status-pill.red    { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+    .verdict-list { list-style: none; padding: 0; }
+    .verdict-list li { font-size: 12px; padding: 6px 0; border-bottom: 1px solid rgba(30,45,69,0.5); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .verdict-list li:last-child { border-bottom: none; }
+    .verdict-bullet { color: var(--accent2); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .summary-box { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(6,182,212,0.05)); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 14px; }
+    .summary-text { font-size: 13px; font-weight: 500; line-height: 1.6; }
+    .summary-text em { color: var(--accent2); font-style: normal; font-weight: 700; }
+    .history-list { display:grid; gap:10px; }
+    .history-item { background: var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; }
+    .history-date { font-family:'JetBrains Mono', monospace; font-size:12px; color:#fff; margin-bottom:6px; }
+    .history-title { font-size:13px; line-height:1.5; color:#cbd5e1; }
+    .fallback-box { background: var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  </style>
 </head>
 <body>
-<div id="app">Loading...</div>
-<script>
-async function init(){
- try{
-  const res=await fetch('records/index.json?t='+Date.now());
-  const data=await res.json();
-  const latest=data.records[0];
-  document.getElementById('app').innerHTML=`
-    <div class="card">
-      <h2>📡 AI Infra 投资雷达图</h2>
-      <p>${latest.signal.headline}</p>
-      <p style="color:#94a3b8">当前为安全模式（完整仪表盘恢复中）</p>
-    </div>
-    <div class="card">
-      <h3>历史记录</h3>
-      ${data.records.map(r=>`<div>${r.date} - ${r.signal.headline}</div>`).join('')}
-    </div>
-  `;
- }catch(e){
-  document.getElementById('app').innerHTML='加载失败：'+e.message;
- }
-}
-init();
-</script>
+  <div class="container" id="app"><div class="loading">Loading radar...</div></div>
+  <script>
+    const CX = 250, CY = 250, RMAX = 190;
+    const AXIS_ANGLES = [-90, -30, 30, 90, 150, 210];
+    let APP_INDEX = null;
+    let FULL_CACHE = {};
+    let CURRENT_KEY = null;
+    let CURRENT_MODE = 'today';
+
+    function radarPoint(value, axisIndex) {
+      const rad = AXIS_ANGLES[axisIndex] * Math.PI / 180;
+      return { x: CX + (value / 100) * RMAX * Math.cos(rad), y: CY - (value / 100) * RMAX * Math.sin(rad) };
+    }
+    function scoreColor(v) { return v >= 80 ? '#22c55e' : v >= 60 ? '#06b6d4' : v >= 40 ? '#eab308' : '#ef4444'; }
+    function isFullRecord(d) { return d && d.axes && d.signal && d.scores && d.allocation && d.action && d.triggers && d.marketStatus && d.verdicts && d.companies; }
+    async function fetchJson(path) { const res = await fetch(path + '?t=' + Date.now()); if (!res.ok) throw new Error('Failed to fetch ' + path); return res.json(); }
+
+    async function loadAppData() {
+      try {
+        APP_INDEX = await fetchJson('records/index.json');
+        try {
+          const latest = await fetchJson('records/latest.json');
+          if (latest && latest.date) FULL_CACHE[latest.date] = latest;
+        } catch(e) {}
+        CURRENT_KEY = APP_INDEX.latest;
+        render();
+      } catch (e) {
+        document.getElementById('app').innerHTML = `<div class="error-box">页面加载失败：${e.message}</div>`;
+      }
+    }
+
+    async function getRecord(key) {
+      if (FULL_CACHE[key]) return FULL_CACHE[key];
+      try {
+        const full = await fetchJson('records/' + key + '.json');
+        FULL_CACHE[key] = full;
+        return full;
+      } catch (e) {
+        return APP_INDEX.records.find(r => r.date === key) || null;
+      }
+    }
+
+    function buildRadarSVG(d) {
+      const axes = d.axes;
+      const values = [axes.capex.value, axes.power.value, axes.cooling.value, axes.scale.value, axes.visibility.value, axes.pricing.value];
+      const labels = [axes.capex.label, axes.power.label, axes.cooling.label, axes.scale.label, axes.visibility.label, axes.pricing.label];
+      const sublabels = [axes.capex.sublabel, axes.power.sublabel, axes.cooling.sublabel, axes.scale.sublabel, axes.visibility.sublabel, axes.pricing.sublabel];
+      const pts = values.map((v, i) => { const p = radarPoint(v, i); return `${p.x.toFixed(1)},${p.y.toFixed(1)}`; }).join(' ');
+      const rings = [25, 50, 75, 100].map(pct => {
+        const pts = AXIS_ANGLES.map(ang => {
+          const rad = ang * Math.PI / 180;
+          return `${(CX + (pct/100)*RMAX*Math.cos(rad)).toFixed(1)},${(CY - (pct/100)*RMAX*Math.sin(rad)).toFixed(1)}`;
+        }).join(' ');
+        return `<polygon points="${pts}" fill="none" stroke="rgba(59,130,246,${0.12 - pct*0.001})" stroke-width="1"/>`;
+      }).join('');
+      const axisLines = AXIS_ANGLES.map(ang => {
+        const rad = ang * Math.PI / 180;
+        const ex = (CX + RMAX * Math.cos(rad)).toFixed(1);
+        const ey = (CY - RMAX * Math.sin(rad)).toFixed(1);
+        return `<line x1="${CX}" y1="${CY}" x2="${ex}" y2="${ey}" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>`;
+      }).join('');
+      const labelPos = AXIS_ANGLES.map(ang => {
+        const rad = ang * Math.PI / 180;
+        const dist = RMAX + 18;
+        return { x: (CX + dist * Math.cos(rad)).toFixed(1), y: (CY - dist * Math.sin(rad)).toFixed(1), anchor: Math.abs(ang) === 90 ? 'middle' : ang > 0 ? 'start' : 'end' };
+      });
+      const dots = values.map((v, i) => { const p = radarPoint(v, i); return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${scoreColor(v)}" filter="url(#glow)"/>`; }).join('');
+      const axisLabels = values.map((v, i) => { const lp = labelPos[i]; return `<text x="${lp.x}" y="${(parseFloat(lp.y) - 6).toFixed(1)}" text-anchor="${lp.anchor}" class="axis-label">${labels[i]}</text><text x="${lp.x}" y="${parseFloat(lp.y).toFixed(1)}" text-anchor="${lp.anchor}" class="axis-sublabel">${sublabels[i]}</text>`; }).join('');
+      return `<svg class="radar-svg" viewBox="0 0 500 440" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="radarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#22c55e;stop-opacity:0.35"/><stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.15"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><style>.axis-label{fill:#cbd5e1;font-size:11px;font-family:Inter,sans-serif;font-weight:600}.axis-sublabel{fill:#64748b;font-size:9px;font-family:JetBrains Mono,monospace}</style></defs>${rings}${axisLines}<polygon points="${pts}" fill="url(#radarGrad)" stroke="#22c55e" stroke-width="1.5" filter="url(#glow)"/>${dots}${axisLabels}</svg>`;
+    }
+
+    function formatTs(dateLabel) { return `${dateLabel} · AI Infra Radar`; }
+    function switchMode(mode) { CURRENT_MODE = mode; render(); }
+    function switchDate(val) { CURRENT_KEY = val; CURRENT_MODE = 'today'; render(); }
+
+    async function render() {
+      if (!APP_INDEX) return;
+      const d = await getRecord(CURRENT_KEY);
+      const options = APP_INDEX.records.map(r => `<option value="${r.date}" ${r.date===CURRENT_KEY?'selected':''}>${r.date}</option>`).join('');
+      const historyItems = APP_INDEX.records.map(r => `<div class="history-item"><div class="history-date">${r.date}</div><div class="history-title">${r.signal?.headline || 'No headline'}</div></div>`).join('');
+      const badgeStatus = d?.signal?.status || '历史摘要';
+      const badgePhase = d?.signal?.phase || 'Summary';
+      let todayView = '';
+
+      if (!d) {
+        todayView = `<div class="fallback-box">未找到该日期数据。</div>`;
+      } else if (!isFullRecord(d)) {
+        todayView = `<div class="fallback-box"><div class="card-title">历史摘要</div><div class="summary-text">${d.signal?.headline || '暂无摘要'}</div><div style="margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6;">这一天目前只保存了轻量摘要，还没有完整雷达快照。</div></div>`;
+      } else {
+        const allocRows = d.allocation.map(a => `<tr><td>${a.tag ? `<span class="tag ${a.tag}">${a.sub || ''}</span>` : ''}</td><td><div style="font-size:12px;font-weight:600;">${a.label}</div><div class="alloc-bar"><div class="alloc-fill" style="width:${a.pct}%;background:${a.color};"></div></div></td><td><span style="color:${a.color};">${a.pct}%</span></td></tr>`).join('');
+        const triggers = d.triggers.map(t => `<div class="trigger-item"><div class="trigger-icon ${t.iconClass}">${t.icon}</div><div><div class="trigger-text">${t.text}</div><div class="trigger-meaning">${t.meaning}</div></div></div>`).join('');
+        const actionRows = d.action.moves.map(m => `<div class="action-row"><span class="action-arrow">${m.delta}</span><span class="action-text">${m.text}</span></div>`).join('');
+        const verdicts = d.verdicts.map(v => `<li><span class="verdict-bullet">▸</span>${v}</li>`).join('');
+        const statusHTML = [d.marketStatus.demand, d.marketStatus.supply, d.marketStatus.power].map(s => `<div class="status-pill ${s.color}">${s.label} ${s.color === 'green' ? '🟢' : s.color === 'yellow' ? '🟡' : '🔴'}</div>`).join('');
+        const companyRows = d.companies.map(c => `<tr><td><div class="ticker-name">${c.name}</div><div class="ticker-sym">${c.ticker}</div></td><td><span class="tag ${c.tag}">${c.tag === 'core' ? 'Core' : c.tag === 'growth' ? 'Growth' : 'Opt'}</span></td><td style="font-size:11px;color:#94a3b8;">${c.insight}</td></tr>`).join('');
+        todayView = `<div class="main-grid"><div style="display:flex;flex-direction:column;gap:16px;"><div class="card radar-section"><div class="card-title">六维能力雷达 · 赛道健康度</div><div class="radar-wrap">${buildRadarSVG(d)}</div><div class="pulse-bar-wrap"><div class="pulse-bar-labels"><span>赛道总动能</span><span>${d.totalPulse} / 100</span></div><div class="pulse-bar"><div class="pulse-fill" style="width:${d.totalPulse}%"></div></div></div></div><div class="card"><div class="card-title">公司状态快照</div><table class="ticker-table"><thead><tr><th>公司</th><th>定位</th><th>核心看点</th></tr></thead><tbody>${companyRows}</tbody></table></div></div><div class="right-panel"><div class="card"><div class="card-title">市场信号</div><div class="signal-box"><div class="signal-dot"></div><div><div class="signal-text">${d.signal.headline}</div><div class="signal-sub">${d.signal.sub}</div></div></div></div><div class="card"><div class="card-title">关键指标</div><div class="score-grid">${d.scores.map(s => `<div class="score-item ${s.color}"><div class="score-value">${s.value}</div><div class="score-label">${s.label}</div></div>`).join('')}</div></div><div class="card"><div class="card-title">当前建议仓位</div><table class="ticker-table"><thead><tr><th>层级</th><th>标的</th><th style="text-align:right">权重</th></tr></thead><tbody>${allocRows}</tbody></table></div><div class="card"><div class="card-title">⚡ 关键触发</div>${triggers}</div><div class="card"><div class="card-title">📊 今日操作</div><div class="action-box"><div class="action-title">再平衡动作</div>${actionRows}<div class="action-reason">${d.action.reason}</div></div></div></div></div><div class="bottom-section"><div class="card"><div class="card-title">🚦 市场状态</div><div class="status-grid">${statusHTML}</div><div style="font-size:12px;color:#94a3b8;line-height:1.6;margin-top:8px;">行业不是“降温”<br/>而是“被电力卡住节奏”</div></div><div class="card"><div class="card-title">🧩 核心判断</div><ul class="verdict-list">${verdicts}</ul></div><div class="card"><div class="card-title">🧠 一句话</div><div class="summary-box"><div class="summary-text">${d.summary}</div></div></div></div>`;
+      }
+
+      document.getElementById('app').innerHTML = `<div class="header"><div class="header-left"><svg class="radar-icon" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.3"/><circle cx="16" cy="16" r="10" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.5"/><circle cx="16" cy="16" r="6" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.7"/><circle cx="16" cy="16" r="2" fill="#3b82f6"/><line x1="16" y1="16" x2="22" y2="10" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round"/></svg><h1>📡 AI Infra 投资雷达图</h1></div><div class="toolbar"><button class="btn ${CURRENT_MODE==='today'?'active':''}" onclick="switchMode('today')">当天</button><button class="btn ${CURRENT_MODE==='history'?'active':''}" onclick="switchMode('history')">历史</button><select class="date-select" onchange="switchDate(this.value)">${options}</select></div></div><div class="header-meta"><span class="badge ${isFullRecord(d) ? 'green' : 'gray'}">${badgeStatus}</span><span class="badge ${isFullRecord(d) ? 'cyan' : 'gray'}">${badgePhase}</span><span class="timestamp">${formatTs(CURRENT_KEY || APP_INDEX.latest)}</span></div><div id="today-view" class="${CURRENT_MODE==='today'?'':'hidden'}">${todayView}</div><div id="history-view" class="${CURRENT_MODE==='history'?'':'hidden'}"><div class="card"><div class="card-title">历史记录</div><div class="history-list">${historyItems}</div></div></div>`;
+    }
+
+    loadAppData();
+  </script>
 </body>
 </html>
