@@ -1,0 +1,62 @@
+name: Update AI Infra Radar History
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 6 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update-history:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate daily history file
+        run: |
+          mkdir -p records
+          DATE=$(date -u +%F)
+          TODAY_FILE="records/${DATE}.json"
+          if [ ! -f "$TODAY_FILE" ]; then
+            cp records/latest.json "$TODAY_FILE"
+          fi
+
+      - name: Update index.json latest pointer
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const path = 'records/index.json';
+          const latestPath = 'records/latest.json';
+          const today = new Date().toISOString().slice(0,10);
+          const latest = JSON.parse(fs.readFileSync(latestPath, 'utf8'));
+          let index = { latest: today, records: [] };
+          if (fs.existsSync(path)) {
+            index = JSON.parse(fs.readFileSync(path, 'utf8'));
+          }
+          latest.date = today;
+          const summary = { date: today, signal: { headline: latest.signal?.headline || 'AI Infra radar update' } };
+          const existing = index.records.find(r => r.date === today);
+          if (existing) {
+            existing.signal = summary.signal;
+          } else {
+            index.records.unshift(summary);
+          }
+          index.latest = today;
+          fs.writeFileSync(path, JSON.stringify(index, null, 2));
+          EOF
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add records/
+          git diff --cached --quiet || git commit -m "Update radar history for $(date -u +%F)"
+          git push
