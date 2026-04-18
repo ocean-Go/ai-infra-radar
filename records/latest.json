@@ -1,0 +1,18 @@
+{
+  "date": "2026-04-18",
+  "axes": {
+    "capex": { "value": 88, "label": "AI Capex", "sublabel": "大厂投入仍在高位" },
+    "power": { "value": 42, "label": "⚡ 电力约束", "sublabel": "接入与排队仍偏紧" },
+    "cooling": { "value": 74, "label": "冷却技术", "sublabel": "液冷持续渗透" },
+    "scale": { "value": 86, "label": "集群规模", "sublabel": "高密度集群持续扩张" },
+    "visibility": { "value": 78, "label": "订单可见度", "sublabel": "进入交付与兑现阶段" },
+    "pricing": { "value": 72, "label": "定价权", "sublabel": "供给受限支撑价格" }
+  },
+  "signal": {
+    "status": "🟢 主升通道未变",
+    "phase": "⚡ 供给约束主导",
+    "headline": "整体仍在主升通道，AI基础设施需求没有降温",
+    "sub": "短期波动更多来自供给和节奏，而不是基本面反转"
+  },
+  "totalPulse": 73
+}
