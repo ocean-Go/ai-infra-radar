@@ -1,12 +1,36 @@
 {
   "date": "2026-04-19",
   "axes": {
-    "capex": { "value": 90, "label": "AI Capex", "sublabel": "超大规模投入延续" },
-    "power": { "value": 41, "label": "⚡ 电力约束", "sublabel": "接入与供电持续偏紧" },
-    "cooling": { "value": 76, "label": "冷却技术", "sublabel": "液冷成为核心路径" },
-    "scale": { "value": 87, "label": "集群规模", "sublabel": "大型AI园区持续扩张" },
-    "visibility": { "value": 80, "label": "订单可见度", "sublabel": "订单与backlog维持高位" },
-    "pricing": { "value": 73, "label": "定价权", "sublabel": "关键设备议价仍稳" }
+    "capex": {
+      "value": 90,
+      "label": "AI Capex",
+      "sublabel": "超大规模投入延续"
+    },
+    "power": {
+      "value": 41,
+      "label": "⚡ 电力约束",
+      "sublabel": "接入与供电持续偏紧"
+    },
+    "cooling": {
+      "value": 76,
+      "label": "冷却技术",
+      "sublabel": "液冷成为核心路径"
+    },
+    "scale": {
+      "value": 87,
+      "label": "集群规模",
+      "sublabel": "大型AI园区持续扩张"
+    },
+    "visibility": {
+      "value": 80,
+      "label": "订单可见度",
+      "sublabel": "订单与backlog维持高位"
+    },
+    "pricing": {
+      "value": 73,
+      "label": "定价权",
+      "sublabel": "关键设备议价仍稳"
+    }
   },
   "signal": {
     "status": "🟢 赛道仍在正轨",
@@ -15,23 +39,72 @@
     "sub": "需求没有问题，节奏开始被电力与冷却能力限制"
   },
   "scores": [
-    { "value": 90, "label": "Capex 动能", "color": "green" },
-    { "value": 41, "label": "电力余量", "color": "yellow" },
-    { "value": 76, "label": "冷却成熟度", "color": "cyan" },
-    { "value": 87, "label": "规模结构化", "color": "green" }
+    {
+      "value": 90,
+      "label": "Capex 动能",
+      "color": "green"
+    },
+    {
+      "value": 41,
+      "label": "电力余量",
+      "color": "yellow"
+    },
+    {
+      "value": 76,
+      "label": "冷却成熟度",
+      "color": "cyan"
+    },
+    {
+      "value": 87,
+      "label": "规模结构化",
+      "color": "green"
+    }
   ],
   "totalPulse": 75,
   "allocation": [
-    { "tag": "core", "label": "Eaton / Schneider", "sub": "Core", "pct": 50, "color": "#3b82f6" },
-    { "tag": "growth", "label": "Vertiv", "sub": "Growth", "pct": 30, "color": "#22c55e" },
-    { "tag": "opt", "label": "液冷/细分设备", "sub": "Optional", "pct": 10, "color": "#eab308" },
-    { "tag": "cash", "label": "Cash", "sub": "", "pct": 10, "color": "#475569" }
+    {
+      "tag": "core",
+      "label": "Eaton / Schneider",
+      "sub": "Core",
+      "pct": 50,
+      "color": "#3b82f6"
+    },
+    {
+      "tag": "growth",
+      "label": "Vertiv",
+      "sub": "Growth",
+      "pct": 30,
+      "color": "#22c55e"
+    },
+    {
+      "tag": "opt",
+      "label": "液冷/细分设备",
+      "sub": "Optional",
+      "pct": 10,
+      "color": "#eab308"
+    },
+    {
+      "tag": "cash",
+      "label": "Cash",
+      "sub": "",
+      "pct": 10,
+      "color": "#475569"
+    }
   ],
   "action": {
     "moves": [
-      { "delta": "+5%", "text": "Core 小幅加仓，优先 Eaton / Schneider" },
-      { "delta": "Hold", "text": "Growth 不追高，维持 Vertiv 当前结构" },
-      { "delta": "观察", "text": "若出现节奏误杀，可考虑 buy-the-dip" }
+      {
+        "delta": "+5%",
+        "text": "Core 小幅加仓，优先 Eaton / Schneider"
+      },
+      {
+        "delta": "Hold",
+        "text": "Growth 不追高，维持 Vertiv 当前结构"
+      },
+      {
+        "delta": "观察",
+        "text": "若出现节奏误杀，可考虑 buy-the-dip"
+      }
     ],
     "reason": "需求端依旧强，但行业从成长故事进入工业执行阶段。更适合偏 Core 的稳健加仓，而不是追逐高弹性。"
   },
@@ -56,9 +129,18 @@
     }
   ],
   "marketStatus": {
-    "demand": { "label": "需求", "color": "green" },
-    "supply": { "label": "供给", "color": "yellow" },
-    "power": { "label": "电力", "color": "yellow" }
+    "demand": {
+      "label": "需求",
+      "color": "green"
+    },
+    "supply": {
+      "label": "供给",
+      "color": "yellow"
+    },
+    "power": {
+      "label": "电力",
+      "color": "yellow"
+    }
   },
   "verdicts": [
     "AI Capex 仍在高位，赛道主线未变",
