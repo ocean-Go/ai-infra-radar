@@ -18,7 +18,7 @@ jobs:
       - name: Ensure records directory
         run: mkdir -p records
 
-      - name: Archive inbox to latest and dated record
+      - name: Archive inbox to latest and dated record with duplicate guard
         run: |
           node <<'EOF'
           const fs = require('fs');
@@ -27,21 +27,36 @@ jobs:
           const latestPath = 'records/latest.json';
           const datedPath = `records/${today}.json`;
           const indexPath = 'records/index.json';
+          const statePath = 'records/ingest-state.json';
 
           if (!fs.existsSync(inboxPath)) {
             throw new Error('records/inbox.json not found');
           }
 
           const inbox = JSON.parse(fs.readFileSync(inboxPath, 'utf8'));
-          inbox.date = today;
+          const payloadHash = JSON.stringify(inbox);
 
-          fs.writeFileSync(latestPath, JSON.stringify(inbox, null, 2));
-          fs.writeFileSync(datedPath, JSON.stringify(inbox, null, 2));
+          let state = { last_ingested_date: null, last_ingested_hash: null };
+          if (fs.existsSync(statePath)) {
+            state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+          }
 
           let index = { latest: today, records: [] };
           if (fs.existsSync(indexPath)) {
             index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
           }
+
+          const alreadyInIndex = index.records.some(r => r.date === today);
+          const alreadySamePayload = state.last_ingested_date === today && state.last_ingested_hash === payloadHash;
+
+          if (alreadyInIndex && alreadySamePayload && fs.existsSync(datedPath)) {
+            console.log(`No-op: ${today} already ingested with same payload.`);
+            process.exit(0);
+          }
+
+          inbox.date = today;
+          fs.writeFileSync(latestPath, JSON.stringify(inbox, null, 2));
+          fs.writeFileSync(datedPath, JSON.stringify(inbox, null, 2));
 
           const summary = {
             date: today,
@@ -57,8 +72,13 @@ jobs:
             index.records.unshift(summary);
           }
 
+          index.records = index.records.sort((a, b) => b.date.localeCompare(a.date));
           index.latest = today;
           fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
+
+          state.last_ingested_date = today;
+          state.last_ingested_hash = payloadHash;
+          fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
           EOF
 
       - name: Commit changes
