@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "rules": {
+    "pulse_min": 0,
+    "pulse_max": 100,
+    "axis_min": 0,
+    "axis_max": 100,
+    "max_daily_pulse_change": 12,
+    "max_daily_axis_change": 20,
+    "allocation_sum_expected": 100,
+    "allocation_sum_tolerance": 0,
+    "required_axes": ["capex", "power", "cooling", "scale", "visibility", "pricing"],
+    "required_allocation_tags": ["core", "growth", "opt", "cash"],
+    "required_top_fields": ["date", "axes", "signal", "scores", "totalPulse", "allocation", "action", "triggers", "marketStatus", "verdicts", "summary", "companies"]
+  }
+}
