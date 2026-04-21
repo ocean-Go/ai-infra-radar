@@ -18,6 +18,42 @@ jobs:
       - name: Ensure records directory
         run: mkdir -p records
 
+      - name: Validate and detect anomalies
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const inbox = JSON.parse(fs.readFileSync('records/inbox.json','utf8'));
+          const rules = JSON.parse(fs.readFileSync('records/validation-rules.json','utf8')).rules;
+
+          let warnings = [];
+
+          rules.required_top_fields.forEach(f => {
+            if (!(f in inbox)) warnings.push(`Missing field: ${f}`);
+          });
+
+          Object.values(inbox.axes).forEach(a => {
+            if (a.value < rules.axis_min || a.value > rules.axis_max) {
+              warnings.push(`Axis out of range: ${a.label}`);
+            }
+          });
+
+          if (inbox.totalPulse < rules.pulse_min || inbox.totalPulse > rules.pulse_max) {
+            warnings.push('totalPulse out of range');
+          }
+
+          const sum = inbox.allocation.reduce((s,x)=>s+x.pct,0);
+          if (sum !== rules.allocation_sum_expected) {
+            warnings.push(`Allocation sum != 100 (got ${sum})`);
+          }
+
+          if (warnings.length > 0) {
+            console.log('⚠️ Anomaly warnings:');
+            warnings.forEach(w => console.log('-', w));
+          } else {
+            console.log('✅ No anomalies detected');
+          }
+          EOF
+
       - name: Archive inbox to latest and dated record with duplicate guard
         run: |
           node <<'EOF'
@@ -28,10 +64,6 @@ jobs:
           const datedPath = `records/${today}.json`;
           const indexPath = 'records/index.json';
           const statePath = 'records/ingest-state.json';
-
-          if (!fs.existsSync(inboxPath)) {
-            throw new Error('records/inbox.json not found');
-          }
 
           const inbox = JSON.parse(fs.readFileSync(inboxPath, 'utf8'));
           const payloadHash = JSON.stringify(inbox);
