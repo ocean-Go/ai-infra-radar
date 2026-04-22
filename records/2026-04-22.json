@@ -1,0 +1,61 @@
+{
+  "date": "2026-04-22",
+  "axes": {
+    "capex": { "value": 88, "label": "AI Capex", "sublabel": "高位但边际放缓" },
+    "power": { "value": 40, "label": "⚡ 电力约束", "sublabel": "并网与供电偏紧" },
+    "cooling": { "value": 78, "label": "冷却技术", "sublabel": "液冷成为标配" },
+    "scale": { "value": 86, "label": "集群规模", "sublabel": "高密度持续" },
+    "visibility": { "value": 78, "label": "订单可见度", "sublabel": "backlog维持高位" },
+    "pricing": { "value": 71, "label": "定价权", "sublabel": "议价趋稳" }
+  },
+  "signal": {
+    "status": "🟡 结构性变慢",
+    "phase": "⚡ 约束主导节奏",
+    "headline": "需求稳健，但电力与冷却约束主导节奏",
+    "sub": "项目推进更多受并网与散热能力影响"
+  },
+  "scores": [
+    { "value": 88, "label": "Capex 动能", "color": "green" },
+    { "value": 40, "label": "电力余量", "color": "yellow" },
+    { "value": 78, "label": "冷却成熟度", "color": "cyan" },
+    { "value": 86, "label": "规模结构化", "color": "green" }
+  ],
+  "totalPulse": 74,
+  "allocation": [
+    { "tag": "core", "label": "Eaton / Schneider", "sub": "Core", "pct": 50, "color": "#3b82f6" },
+    { "tag": "growth", "label": "Vertiv", "sub": "Growth", "pct": 30, "color": "#22c55e" },
+    { "tag": "opt", "label": "液冷/储能", "sub": "Optional", "pct": 10, "color": "#eab308" },
+    { "tag": "cash", "label": "Cash", "sub": "", "pct": 10, "color": "#475569" }
+  ],
+  "action": {
+    "moves": [
+      { "delta": "Hold", "text": "维持整体仓位结构" },
+      { "delta": "+3%", "text": "逢回调小幅加Core" },
+      { "delta": "观察", "text": "等待回调确认再加Growth" }
+    ],
+    "reason": "约束主导阶段，优先配置兑现更稳的Core资产，避免追高弹性。"
+  },
+  "triggers": [
+    { "icon": "⚡", "iconClass": "power", "text": "并网与供电约束持续", "meaning": "→ 决定项目节奏" },
+    { "icon": "💧", "iconClass": "cool", "text": "液冷成为刚需", "meaning": "→ 价值向冷却侧迁移" },
+    { "icon": "📦", "iconClass": "scale", "text": "订单维持高位", "meaning": "→ 需求仍强" }
+  ],
+  "marketStatus": {
+    "demand": { "label": "需求", "color": "green" },
+    "supply": { "label": "供给", "color": "yellow" },
+    "power": { "label": "电力", "color": "yellow" }
+  },
+  "verdicts": [
+    "需求未降温",
+    "电力与冷却成为关键约束",
+    "项目节奏分化加大",
+    "Core资产更具确定性",
+    "回调更多是节奏问题"
+  ],
+  "summary": "AI Infra 仍在上行，但短期表现更多取决于电力接入与冷却能力的兑现。",
+  "companies": [
+    { "name": "Vertiv", "ticker": "VRT · NYSE", "tag": "growth", "insight": "弹性强，受节奏影响更大" },
+    { "name": "Eaton", "ticker": "ETN · NYSE", "tag": "core", "insight": "电力侧刚需，确定性更高" },
+    { "name": "Schneider", "ticker": "SU · EPA", "tag": "core", "insight": "系统集成与液冷协同" }
+  ]
+}
