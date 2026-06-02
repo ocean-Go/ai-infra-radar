@@ -17,7 +17,7 @@ const RADAR_DATA = {
     status: '🟢 赛道升级：兑现验证期',
     phase: '⚡ 需求+扩张+供给约束三期叠加',
     headline: 'AI基础设施从"讲故事"进入"看兑现"阶段，IREN等垂直整合玩家开始被重新定价',
-    sub: 'NVIDIA-IREN 5GW合作是赛道被主流机构认可的里程碑，光子链供给瓶颈逻辑持续强化'
+    sub: 'NVIDIA-IREN 5GW合作是赛道被主流机构认可的里程碑；GTC 2026 同框CoreWeave+IREN确认「AI瓶颈从GPU转向Power」，800VDC+SST拐点 2026-2028'
   },
 
   // 关键评分
@@ -75,6 +75,12 @@ const RADAR_DATA = {
       iconClass: 'scale',
       text: '2027年产能开始兑现',
       meaning: '→ IREN 1,210MW、AAOI 10x营收增长、SIVE $500M→$1B — 兑现期到来'
+    },
+    {
+      icon: '🎯',
+      iconClass: 'power',
+      text: 'GTC 2026: CoreWeave+IREN 同框 = AI 瓶颈转向 Power',
+      meaning: '→ Jensen 把 CRWV(GPU-first)与 IREN(Power-first)并列,确认需求+供给双标杆;Energy & Cooling 13 家中 Vertiv/GEV/Eaton 三甲胜出,Vertiv 9.5 分领跑'
     }
   ],
 
